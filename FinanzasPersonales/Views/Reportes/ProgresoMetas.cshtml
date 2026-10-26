@@ -1,0 +1,109 @@
+@model ReporteMetasViewModel
+@{
+    ViewData["Title"] = "Progreso de metas de ahorro";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-1">
+    <h1 class="h3 mb-0">Progreso de metas de ahorro</h1>
+    <button type="button" class="btn btn-outline-secondary no-imprimir" onclick="window.print()"><i class="bi bi-printer"></i> Imprimir</button>
+</div>
+<p class="text-muted">Situación al @DateTime.Today.ToFecha()</p>
+
+<div class="card mb-3 no-imprimir">
+    <div class="card-body">
+        <form asp-action="ProgresoMetas" method="get" class="row g-2 align-items-end">
+            <div class="col-sm-6 col-lg-3">
+                <label asp-for="Estado" class="form-label"></label>
+                <select asp-for="Estado" class="form-select">
+                    <option value="">Todas</option>
+                    <option value="en-curso">En curso</option>
+                    <option value="cumplidas">Cumplidas</option>
+                </select>
+            </div>
+            <div class="col-sm-6 col-lg-3">
+                <label asp-for="FechaObjetivoHasta" class="form-label"></label>
+                <input asp-for="FechaObjetivoHasta" class="form-control" />
+            </div>
+            <div class="col-lg-3 d-flex gap-2">
+                <button type="submit" class="btn btn-primary flex-fill"><i class="bi bi-funnel"></i> Generar</button>
+                <a asp-action="ProgresoMetas" class="btn btn-outline-secondary" title="Restablecer filtros"><i class="bi bi-x-lg"></i></a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="row g-3 mb-3">
+    <div class="col-6 col-md-3">
+        <div class="card tarjeta-resumen"><div class="card-body">
+            <div class="text-muted">Objetivo total</div>
+            <div class="valor">@Model.TotalObjetivo.ToMoneda()</div>
+        </div></div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card tarjeta-resumen"><div class="card-body">
+            <div class="text-muted">Ahorrado</div>
+            <div class="valor text-success">@Model.TotalAhorrado.ToMoneda()</div>
+        </div></div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card tarjeta-resumen"><div class="card-body">
+            <div class="text-muted">Avance global</div>
+            <div class="valor text-primary">@Model.PorcentajeGlobal%</div>
+        </div></div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card tarjeta-resumen"><div class="card-body">
+            <div class="text-muted">Metas cumplidas</div>
+            <div class="valor">@Model.CantidadCumplidas de @Model.Metas.Count</div>
+        </div></div>
+    </div>
+</div>
+
+@if (Model.Metas.Count == 0)
+{
+    <div class="alert alert-info">No hay metas que coincidan con los filtros seleccionados.</div>
+}
+else
+{
+    <div class="card">
+        <div class="table-responsive">
+            <table class="table table-striped align-middle mb-0 tabla-numeros">
+                <thead class="table-light">
+                    <tr>
+                        <th>Meta</th>
+                        <th>Fecha objetivo</th>
+                        <th class="numero">Objetivo</th>
+                        <th class="numero">Ahorrado</th>
+                        <th class="numero">Falta</th>
+                        <th style="min-width: 160px;">Avance</th>
+                        <th class="numero">Aporte mensual sugerido</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var meta in Model.Metas)
+                    {
+                        <tr>
+                            <td><a asp-controller="MetasAhorro" asp-action="Details" asp-route-id="@meta.Id">@meta.Nombre</a></td>
+                            <td>@meta.FechaObjetivo.ToFecha()</td>
+                            <td class="numero">@meta.MontoObjetivo.ToMoneda()</td>
+                            <td class="numero">@meta.MontoAhorrado.ToMoneda()</td>
+                            <td class="numero">@meta.MontoRestante.ToMoneda()</td>
+                            <td><partial name="_BarraProgresoMeta" model="meta" /></td>
+                            <td class="numero">@(meta.AporteMensualSugerido?.ToMoneda() ?? "—")</td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot class="fw-semibold table-light">
+                    <tr>
+                        <td colspan="2">Totales</td>
+                        <td class="numero">@Model.TotalObjetivo.ToMoneda()</td>
+                        <td class="numero">@Model.TotalAhorrado.ToMoneda()</td>
+                        <td class="numero">@Model.TotalRestante.ToMoneda()</td>
+                        <td>@Model.PorcentajeGlobal%</td>
+                        <td></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+}

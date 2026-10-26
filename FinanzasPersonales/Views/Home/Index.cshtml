@@ -1,0 +1,84 @@
+﻿@model InicioViewModel
+@{
+    ViewData["Title"] = "Inicio";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="h3 mb-0">Resumen general</h1>
+        <p class="text-muted mb-0">Situación actual de sus finanzas al @DateTime.Today.ToFecha()</p>
+    </div>
+    <a asp-controller="Transacciones" asp-action="Create" class="btn btn-primary">
+        <i class="bi bi-plus-circle"></i> Registrar transacción
+    </a>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="card tarjeta-resumen h-100">
+            <div class="card-body">
+                <div class="text-muted"><i class="bi bi-wallet2"></i> Saldo total en billeteras</div>
+                <div class="valor">@Model.SaldoTotal.ToMoneda()</div>
+                <a asp-controller="Billeteras" asp-action="Index" class="small">Ver billeteras</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card tarjeta-resumen h-100">
+            <div class="card-body">
+                <div class="text-muted"><i class="bi bi-arrow-down-circle"></i> Ingresos del mes</div>
+                <div class="valor text-success">@Model.IngresosMes.ToMoneda()</div>
+                <div class="small text-muted">Gastos del mes: <span class="text-danger">@Model.GastosMes.ToMoneda()</span></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card tarjeta-resumen h-100">
+            <div class="card-body">
+                <div class="text-muted"><i class="bi bi-people"></i> Préstamos y deudas</div>
+                <div>Me deben: <strong class="text-success">@Model.PorCobrar.ToMoneda()</strong></div>
+                <div>Debo: <strong class="text-danger">@Model.PorPagar.ToMoneda()</strong></div>
+                <a asp-controller="Reportes" asp-action="PrestamosPendientes" class="small">Ver reporte de pendientes</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <strong>Últimas transacciones</strong>
+        <a asp-controller="Transacciones" asp-action="Index" class="btn btn-sm btn-outline-primary">Ver todas</a>
+    </div>
+    @if (Model.UltimasTransacciones.Count == 0)
+    {
+        <div class="card-body text-muted">Todavía no hay transacciones registradas.</div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-hover mb-0 tabla-numeros">
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Descripción</th>
+                        <th>Categoría</th>
+                        <th>Billetera</th>
+                        <th class="numero">Monto</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var transaccion in Model.UltimasTransacciones)
+                    {
+                        <tr>
+                            <td>@transaccion.Fecha.ToFecha()</td>
+                            <td>@transaccion.Descripcion</td>
+                            <td>@transaccion.Categoria!.Nombre</td>
+                            <td>@transaccion.Billetera!.Nombre</td>
+                            <td class="numero @(transaccion.MontoConSigno < 0 ? "text-danger" : "text-success")">@transaccion.MontoConSigno.ToMoneda()</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>

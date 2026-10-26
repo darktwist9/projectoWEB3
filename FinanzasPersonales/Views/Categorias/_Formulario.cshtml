@@ -1,0 +1,20 @@
+@model Categoria
+
+<div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+<div class="mb-3">
+    <label asp-for="Nombre" class="form-label requerido"></label>
+    <input asp-for="Nombre" class="form-control" placeholder="Ej.: Alimentación" />
+    <span asp-validation-for="Nombre" class="text-danger"></span>
+</div>
+<div class="mb-3">
+    <label asp-for="Tipo" class="form-label requerido"></label>
+    <select asp-for="Tipo" asp-items="Html.GetEnumSelectList<TipoCategoria>()" class="form-select"></select>
+    <div class="form-text">Los ingresos suman al saldo de la billetera y los gastos lo restan.</div>
+    <span asp-validation-for="Tipo" class="text-danger"></span>
+</div>
+<div class="mb-3">
+    <label asp-for="Descripcion" class="form-label"></label>
+    <textarea asp-for="Descripcion" class="form-control" rows="2"></textarea>
+    <span asp-validation-for="Descripcion" class="text-danger"></span>
+</div>
+<p class="small text-muted">Los campos marcados con * son obligatorios.</p>

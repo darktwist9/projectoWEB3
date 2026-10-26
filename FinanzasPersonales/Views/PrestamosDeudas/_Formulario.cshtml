@@ -1,0 +1,41 @@
+@model PrestamoDeudaFormViewModel
+
+<div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+<div class="row">
+    <div class="col-md-6 mb-3">
+        <label asp-for="PrestamoDeuda.Tipo" class="form-label requerido"></label>
+        <select asp-for="PrestamoDeuda.Tipo" asp-items="Html.GetEnumSelectList<TipoPrestamo>()" class="form-select"></select>
+        <span asp-validation-for="PrestamoDeuda.Tipo" class="text-danger"></span>
+    </div>
+    <div class="col-md-6 mb-3">
+        <label asp-for="PrestamoDeuda.PersonaId" class="form-label requerido"></label>
+        <select asp-for="PrestamoDeuda.PersonaId" asp-items="Model.Personas" class="form-select">
+            <option value="">— Seleccione una persona —</option>
+        </select>
+        <div class="form-text">¿No está en la lista? <a asp-controller="Personas" asp-action="Create">Registre una nueva persona</a>.</div>
+        <span asp-validation-for="PrestamoDeuda.PersonaId" class="text-danger"></span>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-4 mb-3">
+        <label asp-for="PrestamoDeuda.Monto" class="form-label requerido"></label>
+        <input asp-for="PrestamoDeuda.Monto" type="number" step="0.01" min="0.01" class="form-control" />
+        <span asp-validation-for="PrestamoDeuda.Monto" class="text-danger"></span>
+    </div>
+    <div class="col-md-4 mb-3">
+        <label asp-for="PrestamoDeuda.FechaInicio" class="form-label requerido"></label>
+        <input asp-for="PrestamoDeuda.FechaInicio" class="form-control" />
+        <span asp-validation-for="PrestamoDeuda.FechaInicio" class="text-danger"></span>
+    </div>
+    <div class="col-md-4 mb-3">
+        <label asp-for="PrestamoDeuda.FechaVencimiento" class="form-label"></label>
+        <input asp-for="PrestamoDeuda.FechaVencimiento" class="form-control" />
+        <span asp-validation-for="PrestamoDeuda.FechaVencimiento" class="text-danger"></span>
+    </div>
+</div>
+<div class="mb-3">
+    <label asp-for="PrestamoDeuda.Descripcion" class="form-label"></label>
+    <input asp-for="PrestamoDeuda.Descripcion" class="form-control" placeholder="Ej.: Préstamo para reparación de moto" />
+    <span asp-validation-for="PrestamoDeuda.Descripcion" class="text-danger"></span>
+</div>
+<p class="small text-muted">Los campos marcados con * son obligatorios.</p>

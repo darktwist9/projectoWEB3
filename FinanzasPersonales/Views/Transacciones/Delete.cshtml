@@ -1,0 +1,29 @@
+@model Transaccion
+@{
+    ViewData["Title"] = "Eliminar transacción";
+}
+
+<h1 class="h3 mb-3">Eliminar transacción</h1>
+<div class="card col-lg-6 mb-3">
+    <div class="card-body">
+        <dl class="row mb-0">
+            <dt class="col-sm-5">@Html.DisplayNameFor(m => m.Fecha)</dt>
+            <dd class="col-sm-7">@Model.Fecha.ToFecha()</dd>
+            <dt class="col-sm-5">@Html.DisplayNameFor(m => m.Monto)</dt>
+            <dd class="col-sm-7 @(Model.MontoConSigno < 0 ? "text-danger" : "text-success")">@Model.MontoConSigno.ToMoneda()</dd>
+            <dt class="col-sm-5">@Html.DisplayNameFor(m => m.Descripcion)</dt>
+            <dd class="col-sm-7">@(Model.Descripcion ?? "—")</dd>
+            <dt class="col-sm-5">@Html.DisplayNameFor(m => m.CategoriaId)</dt>
+            <dd class="col-sm-7">@Model.Categoria!.Nombre (@Model.Categoria.Tipo.ObtenerNombre())</dd>
+            <dt class="col-sm-5">@Html.DisplayNameFor(m => m.BilleteraId)</dt>
+            <dd class="col-sm-7">@Model.Billetera!.Nombre — @Model.Billetera.Usuario!.Nombre</dd>
+            <dt class="col-sm-5">@Html.DisplayNameFor(m => m.PersonaId)</dt>
+            <dd class="col-sm-7">@(Model.Persona?.Nombre ?? "—")</dd>
+            <dt class="col-sm-5">@Html.DisplayNameFor(m => m.PrestamoDeudaId)</dt>
+            <dd class="col-sm-7">@(Model.PrestamoDeuda?.Resumen ?? "—")</dd>
+            <dt class="col-sm-5">@Html.DisplayNameFor(m => m.MetaAhorroId)</dt>
+            <dd class="col-sm-7">@(Model.MetaAhorro?.Nombre ?? "—")</dd>
+        </dl>
+    </div>
+</div>
+<partial name="_ConfirmarEliminacion" />

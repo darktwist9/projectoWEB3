@@ -1,0 +1,23 @@
+@model Billetera
+@{
+    ViewData["Title"] = "Eliminar billetera";
+}
+
+<h1 class="h3 mb-3">Eliminar billetera</h1>
+<div class="card col-lg-6 mb-3">
+    <div class="card-body">
+        <dl class="row mb-0">
+            <dt class="col-sm-5">@Html.DisplayNameFor(m => m.Nombre)</dt>
+            <dd class="col-sm-7">@Model.Nombre</dd>
+            <dt class="col-sm-5">@Html.DisplayNameFor(m => m.Tipo)</dt>
+            <dd class="col-sm-7">@Model.Tipo.ObtenerNombre()</dd>
+            <dt class="col-sm-5">@Html.DisplayNameFor(m => m.UsuarioId)</dt>
+            <dd class="col-sm-7">@Model.Usuario!.Nombre</dd>
+            <dt class="col-sm-5">Saldo actual</dt>
+            <dd class="col-sm-7">@Model.SaldoActual.ToMoneda()</dd>
+            <dt class="col-sm-5">Transacciones</dt>
+            <dd class="col-sm-7">@Model.Transacciones.Count</dd>
+        </dl>
+    </div>
+</div>
+<partial name="_ConfirmarEliminacion" />

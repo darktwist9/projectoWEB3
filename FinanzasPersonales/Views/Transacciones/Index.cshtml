@@ -1,0 +1,118 @@
+@model TransaccionesIndexViewModel
+@{
+    ViewData["Title"] = "Transacciones";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h3 mb-0">Transacciones</h1>
+    <a asp-action="Create" class="btn btn-primary"><i class="bi bi-plus-circle"></i> Nueva transacción</a>
+</div>
+
+<div class="card mb-3">
+    <div class="card-body">
+        <form asp-action="Index" method="get" class="row g-2 align-items-end">
+            <div class="col-sm-6 col-lg-2">
+                <label asp-for="FechaDesde" class="form-label"></label>
+                <input asp-for="FechaDesde" class="form-control" />
+            </div>
+            <div class="col-sm-6 col-lg-2">
+                <label asp-for="FechaHasta" class="form-label"></label>
+                <input asp-for="FechaHasta" class="form-control" />
+            </div>
+            <div class="col-sm-6 col-lg-3">
+                <label asp-for="BilleteraId" class="form-label"></label>
+                <select asp-for="BilleteraId" asp-items="Model.Billeteras" class="form-select">
+                    <option value="">— Todas —</option>
+                </select>
+            </div>
+            <div class="col-sm-6 col-lg-3">
+                <label asp-for="CategoriaId" class="form-label"></label>
+                <select asp-for="CategoriaId" asp-items="Model.Categorias" class="form-select">
+                    <option value="">— Todas —</option>
+                </select>
+            </div>
+            <div class="col-lg-2 d-flex gap-2">
+                <button type="submit" class="btn btn-outline-primary flex-fill"><i class="bi bi-funnel"></i> Filtrar</button>
+                <a asp-action="Index" class="btn btn-outline-secondary" title="Quitar filtros"><i class="bi bi-x-lg"></i></a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@if (Model.Transacciones.Count == 0)
+{
+    <div class="alert alert-info">No se encontraron transacciones con los filtros seleccionados.</div>
+}
+else
+{
+    <div class="card">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0 tabla-numeros">
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Descripción</th>
+                        <th>Categoría</th>
+                        <th>Billetera</th>
+                        <th>Vinculada a</th>
+                        <th class="numero">Monto</th>
+                        <th class="text-end">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var transaccion in Model.Transacciones)
+                    {
+                        <tr>
+                            <td>@transaccion.Fecha.ToFecha()</td>
+                            <td>
+                                @transaccion.Descripcion
+                                @if (transaccion.Persona != null)
+                                {
+                                    <div class="small text-muted"><i class="bi bi-person"></i> @transaccion.Persona.Nombre</div>
+                                }
+                            </td>
+                            <td>@transaccion.Categoria!.Nombre</td>
+                            <td>@transaccion.Billetera!.Nombre <span class="small text-muted">(@transaccion.Billetera.Usuario!.Nombre)</span></td>
+                            <td>
+                                @if (transaccion.PrestamoDeuda != null)
+                                {
+                                    <a asp-controller="PrestamosDeudas" asp-action="Details" asp-route-id="@transaccion.PrestamoDeudaId" class="badge text-bg-warning text-decoration-none">@transaccion.PrestamoDeuda.Resumen</a>
+                                }
+                                else if (transaccion.MetaAhorro != null)
+                                {
+                                    <a asp-controller="MetasAhorro" asp-action="Details" asp-route-id="@transaccion.MetaAhorroId" class="badge text-bg-info text-decoration-none">Meta: @transaccion.MetaAhorro.Nombre</a>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">—</span>
+                                }
+                            </td>
+                            <td class="numero @(transaccion.MontoConSigno < 0 ? "text-danger" : "text-success")">@transaccion.MontoConSigno.ToMoneda()</td>
+                            <td class="text-end text-nowrap">
+                                <a asp-action="Edit" asp-route-id="@transaccion.Id" class="btn btn-sm btn-outline-primary" title="Editar"><i class="bi bi-pencil"></i></a>
+                                <a asp-action="Delete" asp-route-id="@transaccion.Id" class="btn btn-sm btn-outline-danger" title="Eliminar"><i class="bi bi-trash"></i></a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot class="table-light fw-semibold">
+                    <tr>
+                        <td colspan="5">Ingresos (@Model.Transacciones.Count transacción(es) en total)</td>
+                        <td class="numero text-success">@Model.TotalIngresos.ToMoneda()</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td colspan="5">Gastos</td>
+                        <td class="numero text-danger">-@Model.TotalGastos.ToMoneda()</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td colspan="5">Balance</td>
+                        <td class="numero">@((Model.TotalIngresos - Model.TotalGastos).ToMoneda())</td>
+                        <td></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+}

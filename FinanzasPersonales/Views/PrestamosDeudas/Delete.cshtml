@@ -1,0 +1,23 @@
+@model PrestamoDeuda
+@{
+    ViewData["Title"] = "Eliminar préstamo o deuda";
+}
+
+<h1 class="h3 mb-3">Eliminar préstamo o deuda</h1>
+<div class="card col-lg-6 mb-3">
+    <div class="card-body">
+        <dl class="row mb-0">
+            <dt class="col-sm-5">@Html.DisplayNameFor(m => m.Tipo)</dt>
+            <dd class="col-sm-7">@Model.Tipo.ObtenerNombre()</dd>
+            <dt class="col-sm-5">@Html.DisplayNameFor(m => m.PersonaId)</dt>
+            <dd class="col-sm-7">@Model.Persona!.Nombre</dd>
+            <dt class="col-sm-5">@Html.DisplayNameFor(m => m.Monto)</dt>
+            <dd class="col-sm-7">@Model.Monto.ToMoneda()</dd>
+            <dt class="col-sm-5">@Html.DisplayNameFor(m => m.FechaInicio)</dt>
+            <dd class="col-sm-7">@Model.FechaInicio.ToFecha()</dd>
+            <dt class="col-sm-5">Transacciones vinculadas</dt>
+            <dd class="col-sm-7">@Model.Transacciones.Count</dd>
+        </dl>
+    </div>
+</div>
+<partial name="_ConfirmarEliminacion" />

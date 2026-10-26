@@ -1,0 +1,134 @@
+@model ReporteCategoriasViewModel
+@{
+    ViewData["Title"] = "Ingresos y gastos por categoría";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-1">
+    <h1 class="h3 mb-0">Ingresos y gastos por categoría</h1>
+    <button type="button" class="btn btn-outline-secondary no-imprimir" onclick="window.print()"><i class="bi bi-printer"></i> Imprimir</button>
+</div>
+<p class="text-muted">Período: @Model.FechaDesde.ToFecha() al @Model.FechaHasta.ToFecha()</p>
+
+<div class="card mb-3 no-imprimir">
+    <div class="card-body">
+        <form asp-action="MovimientosPorCategoria" method="get" class="row g-2 align-items-end">
+            <div class="col-sm-6 col-lg-2">
+                <label asp-for="FechaDesde" class="form-label"></label>
+                <input asp-for="FechaDesde" class="form-control" />
+            </div>
+            <div class="col-sm-6 col-lg-2">
+                <label asp-for="FechaHasta" class="form-label"></label>
+                <input asp-for="FechaHasta" class="form-control" />
+                <span asp-validation-for="FechaHasta" class="text-danger small"></span>
+            </div>
+            <div class="col-sm-6 col-lg-2">
+                <label asp-for="UsuarioId" class="form-label"></label>
+                <select asp-for="UsuarioId" asp-items="Model.Usuarios" class="form-select">
+                    <option value="">— Todos —</option>
+                </select>
+            </div>
+            <div class="col-sm-6 col-lg-3">
+                <label asp-for="BilleteraId" class="form-label"></label>
+                <select asp-for="BilleteraId" asp-items="Model.Billeteras" class="form-select">
+                    <option value="">— Todas —</option>
+                </select>
+            </div>
+            <div class="col-sm-6 col-lg-1">
+                <label asp-for="Tipo" class="form-label"></label>
+                <select asp-for="Tipo" asp-items="Html.GetEnumSelectList<TipoCategoria>()" class="form-select">
+                    <option value="">Ambos</option>
+                </select>
+            </div>
+            <div class="col-sm-6 col-lg-2 d-flex gap-2">
+                <button type="submit" class="btn btn-primary flex-fill"><i class="bi bi-funnel"></i> Generar</button>
+                <a asp-action="MovimientosPorCategoria" class="btn btn-outline-secondary" title="Restablecer filtros"><i class="bi bi-x-lg"></i></a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="row g-3 mb-3">
+    <div class="col-6 col-md-3">
+        <div class="card tarjeta-resumen"><div class="card-body">
+            <div class="text-muted">Total ingresos</div>
+            <div class="valor text-success">@Model.TotalIngresos.ToMoneda()</div>
+        </div></div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card tarjeta-resumen"><div class="card-body">
+            <div class="text-muted">Total gastos</div>
+            <div class="valor text-danger">@Model.TotalGastos.ToMoneda()</div>
+        </div></div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card tarjeta-resumen"><div class="card-body">
+            <div class="text-muted">Balance</div>
+            <div class="valor @(Model.Balance < 0 ? "text-danger" : "text-primary")">@Model.Balance.ToMoneda()</div>
+        </div></div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card tarjeta-resumen"><div class="card-body">
+            <div class="text-muted">Transacciones</div>
+            <div class="valor">@Model.CantidadTransacciones</div>
+        </div></div>
+    </div>
+</div>
+
+@if (Model.Filas.Count == 0)
+{
+    <div class="alert alert-info">No hay movimientos en el período y con los filtros seleccionados.</div>
+}
+else
+{
+    <div class="card">
+        <div class="table-responsive">
+            <table class="table table-striped mb-0 tabla-numeros">
+                <thead class="table-light">
+                    <tr>
+                        <th>Categoría</th>
+                        <th>Tipo</th>
+                        <th class="numero">Cantidad</th>
+                        <th class="numero">Total</th>
+                        <th class="numero">Promedio</th>
+                        <th class="numero">% de su tipo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var fila in Model.Filas)
+                    {
+                        <tr>
+                            <td>@fila.Categoria</td>
+                            <td>
+                                <span class="badge @(fila.Tipo == TipoCategoria.Ingreso ? "text-bg-success" : "text-bg-danger")">@fila.Tipo.ObtenerNombre()</span>
+                            </td>
+                            <td class="numero">@fila.Cantidad</td>
+                            <td class="numero">@fila.Total.ToMoneda()</td>
+                            <td class="numero">@fila.Promedio.ToMoneda()</td>
+                            <td class="numero">@Model.Porcentaje(fila)%</td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot class="fw-semibold">
+                    <tr>
+                        <td colspan="2">Total ingresos</td>
+                        <td class="numero">@Model.Filas.Where(f => f.Tipo == TipoCategoria.Ingreso).Sum(f => f.Cantidad)</td>
+                        <td class="numero text-success">@Model.TotalIngresos.ToMoneda()</td>
+                        <td colspan="2"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">Total gastos</td>
+                        <td class="numero">@Model.Filas.Where(f => f.Tipo == TipoCategoria.Gasto).Sum(f => f.Cantidad)</td>
+                        <td class="numero text-danger">@Model.TotalGastos.ToMoneda()</td>
+                        <td colspan="2"></td>
+                    </tr>
+                    <tr class="table-light">
+                        <td colspan="2">Balance (ingresos − gastos)</td>
+                        <td class="numero">@Model.CantidadTransacciones</td>
+                        <td class="numero">@Model.Balance.ToMoneda()</td>
+                        <td colspan="2"></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+}

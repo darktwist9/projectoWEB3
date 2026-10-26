@@ -1,0 +1,28 @@
+@model BilleteraFormViewModel
+
+<div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+<div class="mb-3">
+    <label asp-for="Billetera.UsuarioId" class="form-label requerido"></label>
+    <select asp-for="Billetera.UsuarioId" asp-items="Model.Usuarios" class="form-select">
+        <option value="">— Seleccione un usuario —</option>
+    </select>
+    <span asp-validation-for="Billetera.UsuarioId" class="text-danger"></span>
+</div>
+<div class="mb-3">
+    <label asp-for="Billetera.Nombre" class="form-label requerido"></label>
+    <input asp-for="Billetera.Nombre" class="form-control" placeholder="Ej.: Cuenta de ahorro" />
+    <span asp-validation-for="Billetera.Nombre" class="text-danger"></span>
+</div>
+<div class="row">
+    <div class="col-md-6 mb-3">
+        <label asp-for="Billetera.Tipo" class="form-label requerido"></label>
+        <select asp-for="Billetera.Tipo" asp-items="Html.GetEnumSelectList<TipoBilletera>()" class="form-select"></select>
+        <span asp-validation-for="Billetera.Tipo" class="text-danger"></span>
+    </div>
+    <div class="col-md-6 mb-3">
+        <label asp-for="Billetera.SaldoInicial" class="form-label requerido"></label>
+        <input asp-for="Billetera.SaldoInicial" type="number" step="0.01" min="0" class="form-control" />
+        <span asp-validation-for="Billetera.SaldoInicial" class="text-danger"></span>
+    </div>
+</div>
+<p class="small text-muted">Los campos marcados con * son obligatorios.</p>

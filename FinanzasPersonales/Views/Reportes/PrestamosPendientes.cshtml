@@ -1,0 +1,132 @@
+@model ReportePrestamosViewModel
+@{
+    ViewData["Title"] = "Préstamos y deudas pendientes";
+    var hoy = DateTime.Today;
+}
+
+<div class="d-flex justify-content-between align-items-center mb-1">
+    <h1 class="h3 mb-0">Préstamos y deudas pendientes</h1>
+    <button type="button" class="btn btn-outline-secondary no-imprimir" onclick="window.print()"><i class="bi bi-printer"></i> Imprimir</button>
+</div>
+<p class="text-muted">Situación al @hoy.ToFecha()</p>
+
+<div class="card mb-3 no-imprimir">
+    <div class="card-body">
+        <form asp-action="PrestamosPendientes" method="get" class="row g-2 align-items-end">
+            <div class="col-sm-6 col-lg-3">
+                <label asp-for="Tipo" class="form-label"></label>
+                <select asp-for="Tipo" asp-items="Html.GetEnumSelectList<TipoPrestamo>()" class="form-select">
+                    <option value="">— Préstamos y deudas —</option>
+                </select>
+            </div>
+            <div class="col-sm-6 col-lg-3">
+                <label asp-for="PersonaId" class="form-label"></label>
+                <select asp-for="PersonaId" asp-items="Model.Personas" class="form-select">
+                    <option value="">— Todas —</option>
+                </select>
+            </div>
+            <div class="col-sm-6 col-lg-2">
+                <label asp-for="Estado" class="form-label"></label>
+                <select asp-for="Estado" asp-items="Html.GetEnumSelectList<EstadoPrestamo>()" class="form-select">
+                    <option value="">Pendientes y vencidos</option>
+                </select>
+            </div>
+            <div class="col-sm-6 col-lg-2">
+                <label asp-for="VencimientoHasta" class="form-label"></label>
+                <input asp-for="VencimientoHasta" class="form-control" />
+            </div>
+            <div class="col-lg-2 d-flex gap-2">
+                <button type="submit" class="btn btn-primary flex-fill"><i class="bi bi-funnel"></i> Generar</button>
+                <a asp-action="PrestamosPendientes" class="btn btn-outline-secondary" title="Restablecer filtros"><i class="bi bi-x-lg"></i></a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="row g-3 mb-3">
+    <div class="col-6 col-md-3">
+        <div class="card tarjeta-resumen"><div class="card-body">
+            <div class="text-muted">Por cobrar (me deben)</div>
+            <div class="valor text-success">@Model.TotalPorCobrar.ToMoneda()</div>
+        </div></div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card tarjeta-resumen"><div class="card-body">
+            <div class="text-muted">Por pagar (debo)</div>
+            <div class="valor text-danger">@Model.TotalPorPagar.ToMoneda()</div>
+        </div></div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card tarjeta-resumen"><div class="card-body">
+            <div class="text-muted">Registros</div>
+            <div class="valor">@Model.Prestamos.Count</div>
+        </div></div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card tarjeta-resumen"><div class="card-body">
+            <div class="text-muted">Vencidos</div>
+            <div class="valor @(Model.CantidadVencidos > 0 ? "text-danger" : "")">@Model.CantidadVencidos</div>
+        </div></div>
+    </div>
+</div>
+
+@if (Model.Prestamos.Count == 0)
+{
+    <div class="alert alert-info">No hay préstamos ni deudas que coincidan con los filtros seleccionados.</div>
+}
+else
+{
+    <div class="card">
+        <div class="table-responsive">
+            <table class="table table-striped align-middle mb-0 tabla-numeros">
+                <thead class="table-light">
+                    <tr>
+                        <th>Persona</th>
+                        <th>Tipo</th>
+                        <th>Descripción</th>
+                        <th>Inicio</th>
+                        <th>Vencimiento</th>
+                        <th class="numero">Monto</th>
+                        <th class="numero">Pagado</th>
+                        <th class="numero">Saldo pendiente</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var prestamo in Model.Prestamos)
+                    {
+                        <tr>
+                            <td><a asp-controller="PrestamosDeudas" asp-action="Details" asp-route-id="@prestamo.Id">@prestamo.Persona!.Nombre</a></td>
+                            <td>@prestamo.Tipo.ObtenerNombre()</td>
+                            <td>@prestamo.Descripcion</td>
+                            <td>@prestamo.FechaInicio.ToFecha()</td>
+                            <td>
+                                @prestamo.FechaVencimiento.ToFecha()
+                                @if (prestamo.FechaVencimiento.HasValue && prestamo.Estado != EstadoPrestamo.Saldado)
+                                {
+                                    var dias = (prestamo.FechaVencimiento.Value - hoy).Days;
+                                    <div class="small @(dias < 0 ? "text-danger" : "text-muted")">
+                                        @(dias < 0 ? $"Vencido hace {-dias} día(s)" : $"Faltan {dias} día(s)")
+                                    </div>
+                                }
+                            </td>
+                            <td class="numero">@prestamo.Monto.ToMoneda()</td>
+                            <td class="numero">@prestamo.MontoPagado.ToMoneda()</td>
+                            <td class="numero fw-semibold">@prestamo.SaldoPendiente.ToMoneda()</td>
+                            <td><partial name="_EstadoPrestamo" model="prestamo.Estado" /></td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot class="fw-semibold table-light">
+                    <tr>
+                        <td colspan="5">Totales</td>
+                        <td class="numero">@Model.TotalMonto.ToMoneda()</td>
+                        <td class="numero">@Model.TotalPagado.ToMoneda()</td>
+                        <td class="numero">@Model.TotalPendiente.ToMoneda()</td>
+                        <td></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+}

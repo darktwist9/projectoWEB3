@@ -1,0 +1,77 @@
+@model List<Billetera>
+@{
+    ViewData["Title"] = "Billeteras";
+    var usuarios = (List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>)ViewData["Usuarios"]!;
+    var usuarioSeleccionado = ViewData["UsuarioSeleccionado"] as int?;
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h3 mb-0">Billeteras</h1>
+    <a asp-action="Create" asp-route-usuarioId="@usuarioSeleccionado" class="btn btn-primary"><i class="bi bi-plus-circle"></i> Nueva billetera</a>
+</div>
+
+<form asp-action="Index" method="get" class="row g-2 mb-3">
+    <div class="col-sm-6 col-md-4">
+        <select name="usuarioId" class="form-select" aria-label="Filtrar por usuario">
+            <option value="">— Todos los usuarios —</option>
+            @foreach (var usuario in usuarios)
+            {
+                <option value="@usuario.Value" selected="@(usuario.Value == usuarioSeleccionado?.ToString())">@usuario.Text</option>
+            }
+        </select>
+    </div>
+    <div class="col-auto">
+        <button type="submit" class="btn btn-outline-primary"><i class="bi bi-funnel"></i> Filtrar</button>
+    </div>
+</form>
+
+@if (Model.Count == 0)
+{
+    <div class="alert alert-info">No hay billeteras para mostrar.</div>
+}
+else
+{
+    <div class="card">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0 tabla-numeros">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Tipo</th>
+                        <th>Usuario</th>
+                        <th class="numero">Saldo inicial</th>
+                        <th class="numero">Saldo actual</th>
+                        <th class="text-end">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var billetera in Model)
+                    {
+                        <tr>
+                            <td><a asp-action="Details" asp-route-id="@billetera.Id">@billetera.Nombre</a></td>
+                            <td>@billetera.Tipo.ObtenerNombre()</td>
+                            <td>@billetera.Usuario!.Nombre</td>
+                            <td class="numero">@billetera.SaldoInicial.ToMoneda()</td>
+                            <td class="numero fw-semibold @(billetera.SaldoActual < 0 ? "text-danger" : "")">@billetera.SaldoActual.ToMoneda()</td>
+                            <td class="text-end text-nowrap">
+                                <a asp-controller="Transacciones" asp-action="Create" asp-route-billeteraId="@billetera.Id" class="btn btn-sm btn-outline-success" title="Registrar transacción">
+                                    <i class="bi bi-plus-circle"></i>
+                                </a>
+                                <a asp-action="Details" asp-route-id="@billetera.Id" class="btn btn-sm btn-outline-secondary" title="Ver movimientos"><i class="bi bi-eye"></i></a>
+                                <a asp-action="Edit" asp-route-id="@billetera.Id" class="btn btn-sm btn-outline-primary" title="Editar"><i class="bi bi-pencil"></i></a>
+                                <a asp-action="Delete" asp-route-id="@billetera.Id" class="btn btn-sm btn-outline-danger" title="Eliminar"><i class="bi bi-trash"></i></a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr class="table-light fw-semibold">
+                        <td colspan="4">Total (@Model.Count billetera(s))</td>
+                        <td class="numero">@Model.Sum(b => b.SaldoActual).ToMoneda()</td>
+                        <td></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+}

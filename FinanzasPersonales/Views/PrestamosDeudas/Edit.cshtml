@@ -1,0 +1,20 @@
+@model PrestamoDeudaFormViewModel
+@{
+    ViewData["Title"] = "Editar préstamo o deuda";
+}
+
+<h1 class="h3 mb-3">Editar préstamo o deuda</h1>
+<div class="card col-lg-9">
+    <div class="card-body">
+        <form asp-action="Edit" method="post">
+            <input type="hidden" asp-for="PrestamoDeuda.Id" />
+            <partial name="_Formulario" model="Model" />
+            <button type="submit" class="btn btn-primary"><i class="bi bi-save"></i> Guardar cambios</button>
+            <a asp-action="Details" asp-route-id="@Model.PrestamoDeuda.Id" class="btn btn-secondary">Cancelar</a>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

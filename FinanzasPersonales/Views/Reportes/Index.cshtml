@@ -1,0 +1,40 @@
+@{
+    ViewData["Title"] = "Reportes";
+}
+
+<h1 class="h3 mb-3">Reportes</h1>
+<div class="row g-3">
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h2 class="h5"><i class="bi bi-pie-chart text-primary"></i> Ingresos y gastos por categoría</h2>
+                <p class="text-muted">¿En qué se gasta el dinero y de dónde vienen los ingresos? Agrupa los movimientos de un período por categoría con totales, porcentajes y balance.</p>
+            </div>
+            <div class="card-footer bg-transparent">
+                <a asp-action="MovimientosPorCategoria" class="btn btn-primary">Ver reporte</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h2 class="h5"><i class="bi bi-cash-coin text-primary"></i> Préstamos y deudas pendientes</h2>
+                <p class="text-muted">¿Quién me debe y a quién le debo? Muestra el saldo pendiente de cada préstamo o deuda, su vencimiento y los totales por cobrar y por pagar.</p>
+            </div>
+            <div class="card-footer bg-transparent">
+                <a asp-action="PrestamosPendientes" class="btn btn-primary">Ver reporte</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h2 class="h5"><i class="bi bi-piggy-bank text-primary"></i> Progreso de metas de ahorro</h2>
+                <p class="text-muted">¿Cuánto falta para cada meta? Compara lo ahorrado con el objetivo y sugiere el aporte mensual necesario para cumplir a tiempo.</p>
+            </div>
+            <div class="card-footer bg-transparent">
+                <a asp-action="ProgresoMetas" class="btn btn-primary">Ver reporte</a>
+            </div>
+        </div>
+    </div>
+</div>

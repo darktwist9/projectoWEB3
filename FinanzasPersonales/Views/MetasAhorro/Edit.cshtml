@@ -1,0 +1,20 @@
+@model MetaAhorro
+@{
+    ViewData["Title"] = "Editar meta de ahorro";
+}
+
+<h1 class="h3 mb-3">Editar meta de ahorro</h1>
+<div class="card col-lg-6">
+    <div class="card-body">
+        <form asp-action="Edit" method="post">
+            <input type="hidden" asp-for="Id" />
+            <partial name="_Formulario" model="Model" />
+            <button type="submit" class="btn btn-primary"><i class="bi bi-save"></i> Guardar cambios</button>
+            <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-secondary">Cancelar</a>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

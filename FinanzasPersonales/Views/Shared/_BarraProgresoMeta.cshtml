@@ -1,0 +1,4 @@
+@model MetaAhorro
+<div class="progress" role="progressbar" aria-label="Avance de @Model.Nombre" aria-valuenow="@Model.PorcentajeAvance" aria-valuemin="0" aria-valuemax="100" style="height: 1.25rem;">
+    <div class="progress-bar @(Model.Cumplida ? "bg-success" : "")" style="width: @Model.PorcentajeAvance%">@Model.PorcentajeAvance%</div>
+</div>

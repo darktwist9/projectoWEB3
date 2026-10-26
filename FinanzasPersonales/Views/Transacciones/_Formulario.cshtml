@@ -1,0 +1,70 @@
+@model TransaccionFormViewModel
+
+<div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+<div class="row">
+    <div class="col-md-6 mb-3">
+        <label asp-for="Transaccion.BilleteraId" class="form-label requerido"></label>
+        <select asp-for="Transaccion.BilleteraId" asp-items="Model.Billeteras" class="form-select">
+            <option value="">— Seleccione una billetera —</option>
+        </select>
+        <span asp-validation-for="Transaccion.BilleteraId" class="text-danger"></span>
+    </div>
+    <div class="col-md-6 mb-3">
+        <label asp-for="Transaccion.CategoriaId" class="form-label requerido"></label>
+        <select asp-for="Transaccion.CategoriaId" asp-items="Model.Categorias" class="form-select">
+            <option value="">— Seleccione una categoría —</option>
+        </select>
+        <div class="form-text">La categoría define si es un ingreso o un gasto.</div>
+        <span asp-validation-for="Transaccion.CategoriaId" class="text-danger"></span>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6 mb-3">
+        <label asp-for="Transaccion.Monto" class="form-label requerido"></label>
+        <input asp-for="Transaccion.Monto" type="number" step="0.01" min="0.01" class="form-control" />
+        <span asp-validation-for="Transaccion.Monto" class="text-danger"></span>
+    </div>
+    <div class="col-md-6 mb-3">
+        <label asp-for="Transaccion.Fecha" class="form-label requerido"></label>
+        <input asp-for="Transaccion.Fecha" class="form-control" max="@DateTime.Today.ToString("yyyy-MM-dd")" />
+        <span asp-validation-for="Transaccion.Fecha" class="text-danger"></span>
+    </div>
+</div>
+<div class="mb-3">
+    <label asp-for="Transaccion.Descripcion" class="form-label"></label>
+    <input asp-for="Transaccion.Descripcion" class="form-control" placeholder="Ej.: Compras del mercado" />
+    <span asp-validation-for="Transaccion.Descripcion" class="text-danger"></span>
+</div>
+
+<fieldset class="border rounded p-3 mb-3">
+    <legend class="fs-6 w-auto px-2 mb-0">Vincular (opcional)</legend>
+    <div class="row">
+        <div class="col-md-4 mb-2">
+            <label asp-for="Transaccion.PersonaId" class="form-label"></label>
+            <select asp-for="Transaccion.PersonaId" asp-items="Model.Personas" class="form-select">
+                <option value="">— Ninguna —</option>
+            </select>
+            <span asp-validation-for="Transaccion.PersonaId" class="text-danger"></span>
+        </div>
+        <div class="col-md-4 mb-2">
+            <label asp-for="Transaccion.PrestamoDeudaId" class="form-label"></label>
+            <select asp-for="Transaccion.PrestamoDeudaId" asp-items="Model.PrestamosDeudas" class="form-select">
+                <option value="">— Ninguno —</option>
+            </select>
+            <span asp-validation-for="Transaccion.PrestamoDeudaId" class="text-danger"></span>
+        </div>
+        <div class="col-md-4 mb-2">
+            <label asp-for="Transaccion.MetaAhorroId" class="form-label"></label>
+            <select asp-for="Transaccion.MetaAhorroId" asp-items="Model.MetasAhorro" class="form-select">
+                <option value="">— Ninguna —</option>
+            </select>
+            <span asp-validation-for="Transaccion.MetaAhorroId" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-text">
+        Préstamo otorgado: el desembolso es un <strong>gasto</strong> y los cobros son <strong>ingresos</strong>.
+        Deuda contraída: el dinero recibido es un <strong>ingreso</strong> y los pagos son <strong>gastos</strong>.
+        Los aportes a metas se registran como <strong>gasto</strong> (categoría "Ahorro").
+    </div>
+</fieldset>
+<p class="small text-muted">Los campos marcados con * son obligatorios.</p>

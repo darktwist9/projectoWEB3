@@ -1,0 +1,10 @@
+@model EstadoPrestamo
+@{
+    var clase = Model switch
+    {
+        EstadoPrestamo.Saldado => "text-bg-success",
+        EstadoPrestamo.Vencido => "text-bg-danger",
+        _ => "text-bg-warning"
+    };
+}
+<span class="badge @clase">@Model.ObtenerNombre()</span>

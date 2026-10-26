@@ -1,0 +1,21 @@
+@model MetaAhorro
+@{
+    ViewData["Title"] = "Eliminar meta de ahorro";
+}
+
+<h1 class="h3 mb-3">Eliminar meta de ahorro</h1>
+<div class="card col-lg-6 mb-3">
+    <div class="card-body">
+        <dl class="row mb-0">
+            <dt class="col-sm-5">@Html.DisplayNameFor(m => m.Nombre)</dt>
+            <dd class="col-sm-7">@Model.Nombre</dd>
+            <dt class="col-sm-5">@Html.DisplayNameFor(m => m.MontoObjetivo)</dt>
+            <dd class="col-sm-7">@Model.MontoObjetivo.ToMoneda()</dd>
+            <dt class="col-sm-5">@Html.DisplayNameFor(m => m.FechaObjetivo)</dt>
+            <dd class="col-sm-7">@Model.FechaObjetivo.ToFecha()</dd>
+            <dt class="col-sm-5">Aportes</dt>
+            <dd class="col-sm-7">@Model.Aportes.Count (@Model.MontoAhorrado.ToMoneda())</dd>
+        </dl>
+    </div>
+</div>
+<partial name="_ConfirmarEliminacion" />

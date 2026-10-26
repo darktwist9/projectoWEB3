@@ -1,0 +1,23 @@
+@model Persona
+@{
+    ViewData["Title"] = "Eliminar persona";
+}
+
+<h1 class="h3 mb-3">Eliminar persona</h1>
+<div class="card col-lg-6 mb-3">
+    <div class="card-body">
+        <dl class="row mb-0">
+            <dt class="col-sm-5">@Html.DisplayNameFor(m => m.Nombre)</dt>
+            <dd class="col-sm-7">@Model.Nombre</dd>
+            <dt class="col-sm-5">@Html.DisplayNameFor(m => m.Telefono)</dt>
+            <dd class="col-sm-7">@(Model.Telefono ?? "—")</dd>
+            <dt class="col-sm-5">@Html.DisplayNameFor(m => m.Email)</dt>
+            <dd class="col-sm-7">@(Model.Email ?? "—")</dd>
+            <dt class="col-sm-5">Transacciones</dt>
+            <dd class="col-sm-7">@Model.Transacciones.Count</dd>
+            <dt class="col-sm-5">Préstamos / deudas</dt>
+            <dd class="col-sm-7">@Model.PrestamosDeudas.Count</dd>
+        </dl>
+    </div>
+</div>
+<partial name="_ConfirmarEliminacion" />

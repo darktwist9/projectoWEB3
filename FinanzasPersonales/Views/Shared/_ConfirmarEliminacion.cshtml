@@ -1,0 +1,21 @@
+@* Pie común de las vistas Delete: muestra el motivo si no se puede eliminar o el formulario de confirmación *@
+@{
+    var motivoBloqueo = ViewData["MotivoBloqueo"] as string;
+}
+@if (motivoBloqueo != null)
+{
+    <div class="alert alert-warning">
+        <i class="bi bi-lock-fill"></i> @motivoBloqueo
+    </div>
+    <a asp-action="Index" class="btn btn-secondary"><i class="bi bi-arrow-left"></i> Volver al listado</a>
+}
+else
+{
+    <div class="alert alert-danger">
+        <i class="bi bi-exclamation-triangle-fill"></i> ¿Está seguro de que desea eliminar este registro? Esta acción no se puede deshacer.
+    </div>
+    <form asp-action="Delete" asp-route-id="@ViewContext.RouteData.Values["id"]" method="post">
+        <button type="submit" class="btn btn-danger"><i class="bi bi-trash"></i> Sí, eliminar</button>
+        <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+    </form>
+}

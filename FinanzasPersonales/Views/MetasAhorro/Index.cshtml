@@ -1,0 +1,50 @@
+@model List<MetaAhorro>
+@{
+    ViewData["Title"] = "Metas de ahorro";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h3 mb-0">Metas de ahorro</h1>
+    <div>
+        <a asp-controller="Reportes" asp-action="ProgresoMetas" class="btn btn-outline-primary"><i class="bi bi-bar-chart-line"></i> Reporte de avance</a>
+        <a asp-action="Create" class="btn btn-primary"><i class="bi bi-plus-circle"></i> Nueva meta</a>
+    </div>
+</div>
+
+@if (Model.Count == 0)
+{
+    <div class="alert alert-info">No hay metas de ahorro registradas.</div>
+}
+else
+{
+    <div class="row g-3">
+        @foreach (var meta in Model)
+        {
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h2 class="h5 card-title">
+                            @meta.Nombre
+                            @if (meta.Cumplida)
+                            {
+                                <span class="badge text-bg-success">Cumplida</span>
+                            }
+                        </h2>
+                        <p class="text-muted small mb-2">Fecha objetivo: @meta.FechaObjetivo.ToFecha()</p>
+                        <partial name="_BarraProgresoMeta" model="meta" />
+                        <div class="d-flex justify-content-between small mt-2">
+                            <span>Ahorrado: <strong>@meta.MontoAhorrado.ToMoneda()</strong></span>
+                            <span>Meta: <strong>@meta.MontoObjetivo.ToMoneda()</strong></span>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-transparent text-end">
+                        <a asp-controller="Transacciones" asp-action="Create" asp-route-metaAhorroId="@meta.Id" class="btn btn-sm btn-success" title="Registrar aporte"><i class="bi bi-piggy-bank"></i> Aportar</a>
+                        <a asp-action="Details" asp-route-id="@meta.Id" class="btn btn-sm btn-outline-secondary" title="Ver aportes"><i class="bi bi-eye"></i></a>
+                        <a asp-action="Edit" asp-route-id="@meta.Id" class="btn btn-sm btn-outline-primary" title="Editar"><i class="bi bi-pencil"></i></a>
+                        <a asp-action="Delete" asp-route-id="@meta.Id" class="btn btn-sm btn-outline-danger" title="Eliminar"><i class="bi bi-trash"></i></a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}

@@ -1,0 +1,88 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Finanzas Personales</title>
+    <script type="importmap"></script>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/FinanzasPersonales.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <header class="no-imprimir">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
+            <div class="container">
+                <a class="navbar-brand fw-semibold" asp-controller="Home" asp-action="Index">
+                    <i class="bi bi-wallet2"></i> Finanzas Personales
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuPrincipal"
+                        aria-controls="menuPrincipal" aria-expanded="false" aria-label="Mostrar menú">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="menuPrincipal">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Home" asp-action="Index"><i class="bi bi-house"></i> Inicio</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-arrow-left-right"></i> Movimientos
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" asp-controller="Transacciones" asp-action="Index">Transacciones</a></li>
+                                <li><a class="dropdown-item" asp-controller="PrestamosDeudas" asp-action="Index">Préstamos y deudas</a></li>
+                                <li><a class="dropdown-item" asp-controller="MetasAhorro" asp-action="Index">Metas de ahorro</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-folder2-open"></i> Catálogos
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" asp-controller="Usuarios" asp-action="Index">Usuarios</a></li>
+                                <li><a class="dropdown-item" asp-controller="Billeteras" asp-action="Index">Billeteras</a></li>
+                                <li><a class="dropdown-item" asp-controller="Categorias" asp-action="Index">Categorías</a></li>
+                                <li><a class="dropdown-item" asp-controller="Personas" asp-action="Index">Personas</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-bar-chart-line"></i> Reportes
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" asp-controller="Reportes" asp-action="MovimientosPorCategoria">Ingresos y gastos por categoría</a></li>
+                                <li><a class="dropdown-item" asp-controller="Reportes" asp-action="PrestamosPendientes">Préstamos y deudas pendientes</a></li>
+                                <li><a class="dropdown-item" asp-controller="Reportes" asp-action="ProgresoMetas">Progreso de metas de ahorro</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" asp-controller="Reportes" asp-action="Index">Ver todos los reportes</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <a class="btn btn-light btn-sm" asp-controller="Transacciones" asp-action="Create">
+                        <i class="bi bi-plus-circle"></i> Nueva transacción
+                    </a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <main role="main" class="pb-3">
+            <partial name="_Notificaciones" />
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted no-imprimir">
+        <div class="container">
+            &copy; @DateTime.Today.Year - Finanzas Personales - Proyecto grupal ASP.NET Core MVC
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

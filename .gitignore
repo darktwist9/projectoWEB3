@@ -1,0 +1,14 @@
+# Carpetas de compilación y del IDE (no se entregan)
+bin/
+obj/
+.vs/
+.vscode/
+*.user
+*.suo
+
+# Bases de datos locales
+*.mdf
+*.ldf
+
+# Configuración local con credenciales reales (si se crea)
+appsettings.*.local.json

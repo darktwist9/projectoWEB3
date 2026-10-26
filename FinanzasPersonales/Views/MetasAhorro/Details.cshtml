@@ -1,0 +1,62 @@
+@model MetaAhorro
+@{
+    ViewData["Title"] = Model.Nombre;
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+    <div>
+        <h1 class="h3 mb-0">@Model.Nombre</h1>
+        <span class="text-muted">@(Model.Descripcion ?? "Sin descripción") · Fecha objetivo: @Model.FechaObjetivo.ToFecha()</span>
+    </div>
+    <div>
+        <a asp-controller="Transacciones" asp-action="Create" asp-route-metaAhorroId="@Model.Id" class="btn btn-success"><i class="bi bi-piggy-bank"></i> Registrar aporte</a>
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-primary"><i class="bi bi-pencil"></i> Editar</a>
+        <a asp-action="Index" class="btn btn-secondary">Volver</a>
+    </div>
+</div>
+
+<div class="card mb-3">
+    <div class="card-body">
+        <partial name="_BarraProgresoMeta" model="Model" />
+        <div class="row text-center mt-3">
+            <div class="col"><div class="text-muted small">Objetivo</div><strong>@Model.MontoObjetivo.ToMoneda()</strong></div>
+            <div class="col"><div class="text-muted small">Ahorrado</div><strong class="text-success">@Model.MontoAhorrado.ToMoneda()</strong></div>
+            <div class="col"><div class="text-muted small">Falta</div><strong class="text-danger">@Model.MontoRestante.ToMoneda()</strong></div>
+            <div class="col"><div class="text-muted small">Aporte mensual sugerido</div><strong>@(Model.AporteMensualSugerido?.ToMoneda() ?? "—")</strong></div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header"><strong>Aportes</strong></div>
+    @if (Model.Aportes.Count == 0)
+    {
+        <div class="card-body text-muted">Todavía no hay aportes para esta meta.</div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-hover mb-0 tabla-numeros">
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Descripción</th>
+                        <th>Billetera de origen</th>
+                        <th class="numero">Monto</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var aporte in Model.Aportes.OrderByDescending(a => a.Fecha))
+                    {
+                        <tr>
+                            <td>@aporte.Fecha.ToFecha()</td>
+                            <td>@aporte.Descripcion</td>
+                            <td>@aporte.Billetera!.Nombre</td>
+                            <td class="numero">@aporte.Monto.ToMoneda()</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
