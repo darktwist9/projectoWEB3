@@ -2,15 +2,6 @@
 
 Aplicación web en **ASP.NET Core MVC** con **Entity Framework Core** y **SQL Server** para administrar las finanzas personales: billeteras (efectivo, cuentas, tarjetas), ingresos y gastos clasificados por categoría, préstamos otorgados y deudas con otras personas, y metas de ahorro. Incluye reportes con filtros y totales que ayudan a ver en qué se gasta, quién debe dinero y cuánto falta para cada meta.
 
-## Integrantes
-
-| Nombre | Usuario de GitHub |
-|---|---|
-| _Integrante 1_ | `@usuario1` |
-| _Integrante 2_ | `@usuario2` |
-| _Integrante 3_ | `@usuario3` |
-| _Integrante 4_ | `@usuario4` |
-
 ## Funcionalidades
 
 - **CRUD completo** de Usuarios, Billeteras, Categorías, Personas, Transacciones, Préstamos/Deudas y Metas de ahorro.
